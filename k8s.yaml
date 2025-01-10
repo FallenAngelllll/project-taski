@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: taski-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: taski
+  template:
+    metadata:
+      labels:
+        app: taski
+    spec:
+      containers:
+      - name: backend
+        image: taski-backend:v1
+        ports:
+        - containerPort: 8000
+      - name: frontend
+        image: taski-frontend:v1
+        ports:
+        - containerPort: 3000
+      - name: nginx
+        image: nginx:1.25-alpine
+        ports:
+        - containerPort: 80

@@ -5,3 +5,4 @@
 1. Создать докерфайл 
 2. Развернуть через docker-compose
 3. Сделать multi-stage build
+4. Развернуть Taski в k8s (k8s кластер/minikube/microk8s)
