@@ -47,6 +47,8 @@ jobs:
     - name: Deploy to Minikube
       run: |
         kubectl apply -f k8s.yaml
+        kubectl apply -f service.yaml
+        kubectl apply -f ConfigMap.yaml
 
     - name: Wait for pod readiness
       run: |
