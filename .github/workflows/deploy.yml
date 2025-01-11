@@ -50,6 +50,7 @@ jobs:
     - name: Minikube logs
       run: |
         kubectl get pods
+        kubectl describe pod
         
 
     - name: Minikube down
