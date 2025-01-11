@@ -1,17 +1,15 @@
-FROM node:20.9.0-alpine AS build
+FROM node:20.9.0-alpine as build
 
 WORKDIR /app
 
 COPY package*.json ./
+
 RUN npm install
 
-COPY . . 
+COPY . .
+
 RUN npm run build
 
-FROM nginx:1.25-alpine
+CMD ["npx", "-y", "http-server", "-p", "3000", "/app/build"]
 
-RUN rm /etc/nginx/conf.d/default.conf
-
-COPY nginx/nginx.conf /etc/nginx/conf.d/
-
-COPY --from=build /app/build /usr/share/nginx/html
+EXPOSE 3000
