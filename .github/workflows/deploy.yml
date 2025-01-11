@@ -31,22 +31,31 @@ jobs:
     - name: Build backend image
       run: |
         docker build -t taski-backend:v1 -f backend/Dockerfile .
-        sleep 100
+        sleep 10
         
 
     - name: Build frontend image
       run: |
         docker build -t taski-frontend:v1 -f frontend/Dockerfile .
-        sleep 100
+        sleep 10
 
     - name: Generate Minikube config
       run: |
+        docker images
         minikube config view
     
     - name: Deploy to Minikube
       run: |
         kubectl apply -f k8s.yaml
 
+    - name: Wait for pod readiness
+      run: |
+        kubectl wait --for=condition=ready pod -l app=taski --timeout=300s
+
+    - name: Check logs for all containers
+      run: |
+        kubectl logs -l app=taski --all-containers=true
+    
     - name: Minikube logs
       run: |
         kubectl get pods
