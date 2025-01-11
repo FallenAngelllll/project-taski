@@ -3,7 +3,7 @@ name: Docker Compose CI/CD Deploy Taski
 on:
   push:
     branches:
-      - main 
+      - main
   pull_request:
     branches:
       - main
@@ -19,18 +19,23 @@ jobs:
     - name: Log in to DockerHub
       uses: docker/login-action@v2
       with:
-        username: ${{ secrets.DOCKER_USERNAME }} 
-        password: ${{ secrets.DOCKER_PASSWORD }} 
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Build and push backend image
       run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/taski-backend:latest ./backend
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/taski-backend:latest -f ./backend/dockerfile ./backend
         docker push ${{ secrets.DOCKER_USERNAME }}/taski-backend:latest
 
     - name: Build and push frontend image
       run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/taski-frontend:latest -f ./frontend/Dockerfile .
-        docker push ${{ secrets.DOCKER_USERNAME }}/taski-frontend:latest -f ./frontend/Dockerfile .
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/taski-frontend:latest -f ./frontend/dockerfile ./frontend
+        docker push ${{ secrets.DOCKER_USERNAME }}/taski-frontend:latest
+
+    - name: Build and push Nginx image
+      run: |
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/taski-nginx:latest -f ./nginx/nginx.conf ./nginx
+        docker push ${{ secrets.DOCKER_USERNAME }}/taski-nginx:latest
 
     - name: Deploy with Docker Compose
       run: |
