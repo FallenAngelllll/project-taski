@@ -19,26 +19,38 @@ jobs:
     - name: Install kubectl
       uses: azure/setup-kubectl@v3
       with:
-           version: latest
+        version: latest
             
     - name: Start Minikube
       uses: medyagh/setup-minikube@latest
 
+    - name: Set up Docker environment in Minikube
+      run: |
+        eval $(minikube -p minikube docker-env)
+
+    - name: Build backend image
+      run: |
+        docker build -t taski-backend:v1 -f backend/Dockerfile .
+
+    - name: Build frontend image
+      run: |
+        docker build -t taski-frontend:v1 -f frontend/Dockerfile .
+
     - name: Generate Minikube config
       run: |
-          minikube config view
-
+        minikube config view
+    
     - name: Deploy to Minikube
       run: |
-          kubectl apply -f k8s.yaml
-          kubectl apply -f service.yaml
-            
+        kubectl apply -f k8s.yaml
+        kubectl apply -f service.yaml
+
     - name: Minikube logs
       run: |
-          kubectl get all
+        kubectl get all
 
     - name: Minikube down
       if: always()
       run: |
-          minikube stop
-          minikube delete
+        minikube stop
+        minikube delete
