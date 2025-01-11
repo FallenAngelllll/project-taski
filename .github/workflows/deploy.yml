@@ -44,28 +44,10 @@ jobs:
       run: |
         kubectl apply -f k8s.yaml
         kubectl apply -f service.yaml
-        kubectl apply -f ConfigMap.yaml
 
     - name: Wait for pods to be ready
       run: |
         kubectl get pods
-
-    - name: Debug pod description
-      run: |
-        kubectl describe pod -l app=taski
-
-    - name: Debug pod logs
-      run: |
-        for pod in $(kubectl get pods -l app=taski -o jsonpath='{.items[*].metadata.name}'); do
-          echo "Logs for pod: $pod"
-          kubectl logs $pod || echo "No logs for $pod"
-        done
-
-    - name: Verify service
-      run: |
-        kubectl get svc
-        minikube service list
-        minikube service taski-service --url
 
     - name: Minikube cleanup
       if: always()
