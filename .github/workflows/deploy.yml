@@ -49,10 +49,8 @@ jobs:
         kubectl apply -f k8s.yaml
         kubectl apply -f service.yaml
         kubectl apply -f ConfigMap.yaml
-
-    - name: Wait for pod readiness
-      run: |
-        kubectl wait --for=condition=ready pod -l app=taski --timeout=300s
+        minikube service taski-service
+        
 
     - name: Check logs for all containers
       run: |
@@ -61,11 +59,4 @@ jobs:
     - name: Minikube logs
       run: |
         kubectl get pods
-        kubectl describe pod
-        
-
-    - name: Minikube down
-      if: always()
-      run: |
-        minikube stop
-        minikube delete
+        kubectl get svc
