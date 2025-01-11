@@ -31,10 +31,12 @@ jobs:
     - name: Build backend image
       run: |
         docker build -t taski-backend:v1 -f backend/Dockerfile .
+        sleep 10
 
     - name: Build frontend image
       run: |
         docker build -t taski-frontend:v1 -f frontend/Dockerfile .
+        sleep 10
 
     - name: Generate Minikube config
       run: |
@@ -47,7 +49,9 @@ jobs:
 
     - name: Minikube logs
       run: |
-        kubectl get all
+        kubectl get pods
+        kubectl get svc
+        
 
     - name: Minikube down
       if: always()
