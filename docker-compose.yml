@@ -3,6 +3,7 @@ services:
     build:
       context: .
       dockerfile: ./backend/Dockerfile
+    image: ju1ie/taski_backend:latest
     container_name: taski_backend
     command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
     ports:
@@ -15,6 +16,7 @@ services:
     build:
       context: .
       dockerfile: ./frontend/Dockerfile
+    image: ju1ie/taski_frontend:latest
     container_name: taski_frontend
     ports:
       - "3000:80"
