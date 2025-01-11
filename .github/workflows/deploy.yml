@@ -29,8 +29,8 @@ jobs:
 
     - name: Build and push frontend image
       run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/taski-frontend:latest -f ./frontend/dockerfile .
-        docker push ${{ secrets.DOCKER_USERNAME }}/taski-frontend:latest -f ./frontend/dockerfile .
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/taski-frontend:latest -f ./frontend/Dockerfile .
+        docker push ${{ secrets.DOCKER_USERNAME }}/taski-frontend:latest -f ./frontend/Dockerfile .
 
     - name: Deploy with Docker Compose
       run: |
