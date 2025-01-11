@@ -34,7 +34,7 @@ jobs:
 
     - name: Build and push Nginx image
       run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/taski-nginx:latest -f ./nginx/nginx.conf ./nginx
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/taski-nginx:latest -f ./nginx/Dockerfile ./nginx
         docker push ${{ secrets.DOCKER_USERNAME }}/taski-nginx:latest
 
     - name: Deploy with Docker Compose
