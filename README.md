@@ -15,8 +15,8 @@
 
 ### 2. Создаём Dockerfile для frontend и backend
 
-* В папке backend создаём Dockefile — файл для описания сборки Docker-образа:<br />  
-``` FROM python:3.12-alpine ``` - базовый образ для сборки, аlpine - для облегчения веса образа, multi-stage build<br />  
+* В папке backend создаём Dockefile — файл для описания сборки Docker-образа:<br />
+``` FROM python:3.12-alpine ``` - базовый образ для сборки, аlpine - для облегчения веса образа, multi-stage build<br />
 ``` WORKDIR /app ``` - устанавливаем рабочую директорию внутри контейнера на /app<br />
 ``` COPY backend/requirements.txt . ``` - копируем файл requirements.txt из локальной директории backend в текущую рабочую директорию /app контейнера<br />
 ``` RUN pip install --no-cache-dir -r requirements.txt ``` - запускаем установку зависимостей, указанных в requirements.txt, флаг --no-cache-dir запрещает кэширование установленных пакетов, чтобы уменьшить размер образа<br />
