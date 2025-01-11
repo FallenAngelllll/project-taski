@@ -32,6 +32,7 @@ jobs:
       run: |
         docker build -t taski-backend:v1 -f backend/Dockerfile .
         sleep 10
+        kubectl describe pod taski-deployment-5559df6d89-xb9t4
 
     - name: Build frontend image
       run: |
@@ -45,12 +46,10 @@ jobs:
     - name: Deploy to Minikube
       run: |
         kubectl apply -f k8s.yaml
-        kubectl apply -f service.yaml
 
     - name: Minikube logs
       run: |
         kubectl get pods
-        kubectl get svc
         
 
     - name: Minikube down
