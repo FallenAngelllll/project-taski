@@ -31,13 +31,13 @@ jobs:
     - name: Build backend image
       run: |
         docker build -t taski-backend:v1 -f backend/Dockerfile .
-        sleep 10
-        kubectl describe pod taski-deployment-5559df6d89-xb9t4
+        sleep 100
+        
 
     - name: Build frontend image
       run: |
         docker build -t taski-frontend:v1 -f frontend/Dockerfile .
-        sleep 10
+        sleep 100
 
     - name: Generate Minikube config
       run: |
