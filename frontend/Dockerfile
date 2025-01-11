@@ -2,14 +2,19 @@ FROM node:20.9.0-alpine as build
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY frontend/package*.json ./
 
 RUN npm install
 
-COPY . .
+COPY frontend/public ./public
+COPY frontend/src ./src
 
 RUN npm run build
 
-CMD ["npx", "-y", "http-server", "-p", "3000", "/app/build"]
+FROM nginx:1.25-alpine
 
-EXPOSE 3000
+RUN rm /etc/nginx/conf.d/default.conf
+
+COPY nginx/nginx.conf /etc/nginx/conf.d/
+
+COPY --from=build /app/build /usr/share/nginx/html
