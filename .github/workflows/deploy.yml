@@ -49,14 +49,20 @@ jobs:
         kubectl apply -f k8s.yaml
         kubectl apply -f service.yaml
         kubectl apply -f ConfigMap.yaml
-        minikube service taski-service
-        
 
-    - name: Check logs for all containers
-      run: |
-        kubectl logs -l app=taski --all-containers=true
-    
     - name: Minikube logs
       run: |
         kubectl get pods
         kubectl get svc
+        minikube service taski-service
+    
+    - name: Minikube service
+      run: |
+          minikube service taski-service
+          sleep 100
+
+    - name: Minikube down
+      if: always()
+      run: |
+        minikube stop
+        minikube delete
