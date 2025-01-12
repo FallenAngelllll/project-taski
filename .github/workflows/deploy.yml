@@ -40,6 +40,9 @@ jobs:
             docker kill $(docker ps -q) &> /dev/null
             docker rmi -f $(docker images -qa)
             docker system prune --all --force
+            docker pull cr.yandex/$CR_REGISTRY/frontend:${{ github.sha }}
             docker run -p 3000:3000 -d cr.yandex/$CR_REGISTRY/frontend:${{ github.sha }}
+            docker pull cr.yandex/$CR_REGISTRY/backend:${{ github.sha }}
             docker run -p 8000:8000 -d cr.yandex/$CR_REGISTRY/backend:${{ github.sha }}
+            docker pull cr.yandex/$CR_REGISTRY/nginx:${{ github.sha }}
             docker run -p 80:80 --net=host -d cr.yandex/$CR_REGISTRY/nginx:${{ github.sha }}
