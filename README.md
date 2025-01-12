@@ -9,7 +9,7 @@
 
 ## Реализация проекта:
 
-### 1. Клонируем репозиторий проекта "Taski"
+### 1. Клонируем репозиторий проекта "Taski" 
 
 ``` git clone git@github.com:yandex-praktikum/taski.git ```
 
