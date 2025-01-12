@@ -42,7 +42,7 @@
 ``` COPY --from=build /app/build /usr/share/nginx/html ``` - копируем папку /app/build, созданную на этапе build, в директорию /usr/share/nginx/html внутри контейнера. Эта директория, откуда Nginx обслуживает статические файлы. Таким образом, приложение, собранное на первом этапе, становится доступным через веб-сервер Nginx<br /> 
 
 
-* Создадим **директорию nginx** и в ней файл конфигурации **nginx.conf**:<br />
+* В корневой директории создадим **директорию nginx** и в ней файл конфигурации **nginx.conf**:<br />
 
 ``` server { ``` - блок, описывающий настройки конкретного сервера<br />
   ``` listen 80; ``` - HTTP-запросы на порту 80<br />
@@ -220,42 +220,42 @@
 * Установка и запуск Minikube
 
 Для установки Minikube следуйте указаниям, которые можно найти в документации. В процессе установки Minikube вы также установите Kubectl. 
-Это — клиент, который позволяет выполнять запросы к API-серверу Kubernetes.
+Это — клиент, который позволяет выполнять запросы к API-серверу Kubernetes.<br />
 
-Для запуска Minikube выполните команду: ` minikube start `
+Для запуска Minikube выполните команду: ` minikube start `<br />
 
 ![шаг1](https://github.com/FallenAngelllll/project-taski/blob/main/image/Kubernetes%20(K8s)/step%201.png?raw=true)
 
 * Загрузим образы в кластер, чтобы их можно было использовать в Kubernetes:
 
-Команда для **Windows (PowerShell)**: ` & minikube -p minikube docker-env --shell powershell | Invoke-Expression `
-Команда для **Linux/MacOS**: ` eval $(minikube -p minikube docker-env) `
+Команда для **Windows (PowerShell)**: ` & minikube -p minikube docker-env --shell powershell | Invoke-Expression `<br />
+Команда для **Linux/MacOS**: ` eval $(minikube -p minikube docker-env) `<br />
 
-Создание образа для backend: ` docker build -t taski-backend:v1 -f backend/Dockerfile . `
+Создание образа для backend: ` docker build -t taski-backend:v1 -f backend/Dockerfile . `<br />
 
 ![шаг2](https://github.com/FallenAngelllll/project-taski/blob/main/image/Kubernetes%20(K8s)/step%202.png?raw=true)
 
-Создание образа для frontend: ` docker build -t taski-frontend:v1 -f frontend/Dockerfile . `
+Создание образа для frontend: ` docker build -t taski-frontend:v1 -f frontend/Dockerfile . `<br />
 
 ![шаг3](https://github.com/FallenAngelllll/project-taski/blob/main/image/Kubernetes%20(K8s)/step%203.png?raw=true)
 
 * Применение манифестов для развертывания приложения:
 
-Разворачиваем поды с бэкендом, фронтендом и Nginx с помощью объекта Deployment: ` kubectl apply -f k8s.yaml `
-Настраиваем сервис для маршрутизации запросов к развернутым подам: ` kubectl apply -f service.yaml `
+Разворачиваем поды с бэкендом, фронтендом и Nginx с помощью объекта Deployment: ` kubectl apply -f k8s.yaml `<br />
+Настраиваем сервис для маршрутизации запросов к развернутым подам: ` kubectl apply -f service.yaml `<br />
 
 ![шаг4](https://github.com/FallenAngelllll/project-taski/blob/main/image/Kubernetes%20(K8s)/step%204.png?raw=true)
 
 * Проверка состояния развернутых объектов Kubernetes
 
-Посмотрим список всех подов в кластере, их текущий статус и состояние (Running, Pending или CrashLoopBackOff): ` kubectl get pods `
-Посмотрим список всех сервисов в кластере и их настройки (порты и внешние IP-адреса): ` kubectl get svc `
+Посмотрим список всех подов в кластере, их текущий статус и состояние (Running, Pending или CrashLoopBackOff): ` kubectl get pods `<br />
+Посмотрим список всех сервисов в кластере и их настройки (порты и внешние IP-адреса): ` kubectl get svc `<br />
 
 ![шаг5](https://github.com/FallenAngelllll/project-taski/blob/main/image/Kubernetes%20(K8s)/step%205.png?raw=true)
 
 * Открытие сервиса в браузере через Minikube
 
-Введите команду: ` minikube service taski-service `
+Введите команду: ` minikube service taski-service `<br />
 
 ![шаг6](https://github.com/FallenAngelllll/project-taski/blob/main/image/Kubernetes%20(K8s)/step%206.png?raw=true)
 
@@ -277,5 +277,5 @@
 
 * Остановка и удаление кластера Minikube:
 
-Остановим запущенный кластер Minikube: ` minikube stop `
+Остановим запущенный кластер Minikube: ` minikube stop `<br />
 Полностью удалим кластер Minikube: ` minikube delete `
