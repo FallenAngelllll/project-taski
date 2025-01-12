@@ -38,7 +38,7 @@
 ``` FROM nginx:1.25-alpine ``` - второй этап сборки. Базовый образ nginx:1.25-alpine.<br />
 ``` RUN rm /etc/nginx/conf.d/default.conf ``` - удаляем файл конфигурации Nginx по умолчанию<br />
 ``` COPY nginx/nginx.conf /etc/nginx/conf.d/ ``` - копируем файл nginx.conf из локальной папки nginx в директорию конфигурации Nginx внутри контейнера<br />
-``` COPY --from=build /app/build /usr/share/nginx/html ``` - копируем папку /app/build, созданную на этапе build, в директорию /usr/share/nginx/html внутри контейнера. Эта директория, откуда Nginx обслуживает статические файлы. Таким образом, приложение, собранное на первом этапе, становится доступным через веб-сервер Nginx<br />
+``` COPY --from=build /app/build /usr/share/nginx/html ``` - копируем папку /app/build, созданную на этапе build, в директорию /usr/share/nginx/html внутри контейнера. Эта директория, откуда Nginx обслуживает статические файлы. Таким образом, приложение, собранное на первом этапе, становится доступным через веб-сервер Nginx<br /> 
 
 
 
