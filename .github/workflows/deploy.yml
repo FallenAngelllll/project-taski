@@ -17,7 +17,7 @@ jobs:
           yc-sa-json-credentials: ${{ secrets.AUTHORIZATION }}
       - name: Build and push Docker image to Yandex.Cloud Container Registry
         env:
-          CR_REGISTRY: ${{ secrets.CR_REGISTRY }}
+          CR_REGISTRY: crp0sq7kl26fmbmirs4m
           IMAGE_TAG: ${{ github.sha }}
         run: |
           docker build -t cr.yandex/$CR_REGISTRY/frontend:$IMAGE_TAG ./frontend/
@@ -30,7 +30,7 @@ jobs:
         uses: appleboy/ssh-action@master
         env:
           OAUTH_TOKEN: ${{ secrets.OAUTH_TOKEN }}
-          CR_REGISTRY: ${{ secrets.CR_REGISTRY }}
+          CR_REGISTRY: crp0sq7kl26fmbmirs4m
           IMAGE_TAG: ${{ github.sha }}
         with:
           host: 84.201.171.27
