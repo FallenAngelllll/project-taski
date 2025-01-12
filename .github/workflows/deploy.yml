@@ -22,3 +22,10 @@ jobs:
         run: |
           docker build -t cr.yandex/$CR_REGISTRY/frontend:$IMAGE_TAG ./frontend/
           docker push cr.yandex/$CR_REGISTRY/frontend:$IMAGE_TAG
+      - name: Build and push Docker image to Yandex.Cloud Container Registry
+        env:
+          CR_REGISTRY: ${{ secrets.CR_REGISTRY }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t cr.yandex/$CR_REGISTRY/backend:$IMAGE_TAG ./backend/
+          docker push cr.yandex/$CR_REGISTRY/backend:$IMAGE_TAG
