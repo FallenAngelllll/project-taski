@@ -15,17 +15,7 @@ jobs:
         uses: yc-actions/yc-cr-login@v1
         with:
           yc-sa-json-credentials: ${{ secrets.AUTHORIZATION }}
-      - name: Build and push Docker image to Yandex.Cloud Container Registry
-        env:
-          CR_REGISTRY: crp0sq7kl26fmbmirs4m
-          IMAGE_TAG: ${{ github.sha }}
-        run: |
-          docker build -t cr.yandex/$CR_REGISTRY/frontend:$IMAGE_TAG ./frontend/
-          docker push cr.yandex/$CR_REGISTRY/frontend:$IMAGE_TAG
-          docker build -t cr.yandex/$CR_REGISTRY/backend:$IMAGE_TAG ./backend/
-          docker push cr.yandex/$CR_REGISTRY/backend:$IMAGE_TAG
-          docker build -t cr.yandex/$CR_REGISTRY/nginx:$IMAGE_TAG ./nginx/
-          docker push cr.yandex/$CR_REGISTRY/nginx:$IMAGE_TAG
+      
       - name: Connect to VPC-Server
         uses: appleboy/ssh-action@master
         env:
@@ -38,13 +28,4 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: 22
           script: | 
-            echo $OAUTH_TOKEN|docker login --username oauth --password-stdin cr.yandex
-            docker kill $(docker ps -q) &> /dev/null
-            docker rmi -f $(docker images -qa)
-            docker system prune --all --force
-            docker pull cr.yandex/$CR_REGISTRY/frontend:${{ github.sha }}
-            docker run -p 3000:3000 -d cr.yandex/$CR_REGISTRY/frontend:${{ github.sha }}
-            docker pull cr.yandex/$CR_REGISTRY/backend:${{ github.sha }}
-            docker run -p 8000:8000 -d cr.yandex/$CR_REGISTRY/backend:${{ github.sha }}
-            docker pull cr.yandex/$CR_REGISTRY/nginx:${{ github.sha }}
-            docker run -p 80:80 --net=host -d cr.yandex/$CR_REGISTRY/nginx:${{ github.sha }}
+            mkdir zopa
