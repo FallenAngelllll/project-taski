@@ -30,6 +30,8 @@ jobs:
         uses: appleboy/ssh-action@master
         env:
           OAUTH_TOKEN: ${{ secrets.OAUTH_TOKEN }}
+          CR_REGISTRY: ${{ secrets.CR_REGISTRY }}
+          IMAGE_TAG: ${{ github.sha }}
         with:
           host: 84.201.171.27
           username: julie
