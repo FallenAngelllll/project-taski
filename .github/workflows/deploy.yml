@@ -41,5 +41,3 @@ jobs:
           port: 22
           script: | 
             echo $OAUTH_TOKEN|docker login --username oauth --password-stdin cr.yandex
-            docker pull cr.yandex/$CR_REGISTRY/frontend:${{ github.sha }}
-            docker run -p 3000:3000 -d cr.yandex/$CR_REGISTRY/frontend:${{ github.sha }}
