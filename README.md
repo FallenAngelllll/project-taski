@@ -310,7 +310,7 @@
       ```   with: ```<br />
         ```   yc-sa-json-credentials: ${{ secrets.AUTHORIZATION }} ``` <br />
 
-      ``` - name: Build and push Docker image to Yandex.Cloud Container Registry ``` - публикация Docker-образов в реестре, чтобы их можно было использовать при развёртывании на сервере<br />
+```       - name: Build and push Docker image to Yandex.Cloud Container Registry ``` - публикация Docker-образов в реестре, чтобы их можно было использовать при развёртывании на сервере<br />
         ``` env: ```<br />
         ```   CR_REGISTRY: ${{ secrets.CR_REGISTRY }} ```<br />
         ```   IMAGE_TAG: ${{ github.sha }} ```<br />
@@ -322,7 +322,7 @@
         ```   docker build -t cr.yandex/$CR_REGISTRY/nginx:$IMAGE_TAG ./nginx/ ```<br />
         ```   docker push cr.yandex/$CR_REGISTRY/nginx:$IMAGE_TAG ``` <br />
       
-      ``` - name: Connect to VPC-Server ``` - - подключение к удалённому серверу<br />
+```       - name: Connect to VPC-Server ``` - - подключение к удалённому серверу<br />
       ```   uses: appleboy/ssh-action@master ```<br />
       ```   env: ```<br />
         ```   OAUTH_TOKEN: ${{ secrets.TOKEN }} ```<br />
