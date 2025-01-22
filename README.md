@@ -219,7 +219,7 @@
 
 * Установка и запуск Minikube
 
-Для установки Minikube следуйте указаниям, которые можно найти в документации. В процессе установки Minikube вы также установите Kubectl. 
+Для установки Minikube следуйте указаниям, которые можно найти в [документации](https://minikube.sigs.k8s.io/docs/start/?arch=%2Fwindows%2Fx86-64%2Fstable%2F.exe+download "Ссылка"). В процессе установки Minikube вы также установите Kubectl. 
 Это — клиент, который позволяет выполнять запросы к API-серверу Kubernetes.<br />
 
 Для запуска Minikube выполните команду: ` minikube start `<br />
@@ -267,7 +267,7 @@
 
 ![2](https://github.com/FallenAngelllll/project-taski/blob/main/image/Kubernetes%20(K8s)/2.png?raw=true)
 
-- [x] по адресам (порт будет меняться): http://http://127.0.0.1:57915 и http://127.0.0.1:57917/api/tasks
+- [x] также создадим еще задачу и проверим, по адресам (порт будет меняться): http://127.0.0.1:57915 и http://127.0.0.1:57917/api/tasks
 
 ![3](https://github.com/FallenAngelllll/project-taski/blob/main/image/Kubernetes%20(K8s)/3.png?raw=true)
 
@@ -279,3 +279,87 @@
 
 Остановим запущенный кластер Minikube: ` minikube stop `<br />
 Полностью удалим кластер Minikube: ` minikube delete `
+
+### 3. Автоматизируем развертку docker через CI/CD
+
+* На облачной платформе Yandex.Cloud создадим виртуальную машину, а также реестр, где будут храниться docker-образы
+
+![1](https://github.com/FallenAngelllll/project-taski/blob/main/image/CICD/%D0%B2%D0%BC.png?raw=true)
+
+* Установим docker внутри виртуальной машины:
+
+Введите команду: ` sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin `<br />
+
+* В корневой директории создаём папку **.github/workflows** и в ней файл **deploy.yml**:<br />
+
+``` name: CI/CD Deploy Taski ``` - название workflow<br />
+ 
+``` on: ```<br />
+  ``` push: ```<br />
+    ``` branches: ```<br />
+    ```   - main ``` - настраиваем автоматический запуск CI/CD при пуше в ветку main<br />
+    
+``` jobs: ```<br />
+  ``` build: ```<br />
+    ``` runs-on: ubuntu-latest ``` - определяем окружение, где будут выполняться шаги workflow<br />
+    ``` steps: ```<br />
+      ``` - uses: actions/checkout@v2 ``` - загружаем файлы репозитория в рабочую директорию для дальнейшей работы<br />
+      ``` - name: Login to Yandex.Cloud Container Registry ``` - необходимо для того, чтобы пушить образы Docker в YCR<br />
+      ```   id: login-cr ```<br />
+      ```   uses: yc-actions/yc-cr-login@v1 ```<br />
+      ```   with: ```<br />
+        ```   yc-sa-json-credentials: ${{ secrets.AUTHORIZATION }} ``` <br />
+
+      ``` - name: Build and push Docker image to Yandex.Cloud Container Registry ``` - публикация Docker-образов в реестре, чтобы их можно было использовать при развёртывании на сервере<br />
+        ``` env: ```<br />
+        ```   CR_REGISTRY: ${{ secrets.CR_REGISTRY }} ```<br />
+        ```   IMAGE_TAG: ${{ github.sha }} ```<br />
+      ```   run: | ```<br />
+        ```   docker build -t cr.yandex/$CR_REGISTRY/frontend:$IMAGE_TAG ./frontend/ ```<br />
+        ```   docker push cr.yandex/$CR_REGISTRY/frontend:$IMAGE_TAG ```<br />
+        ```   docker build -t cr.yandex/$CR_REGISTRY/backend:$IMAGE_TAG ./backend/ ```<br />
+        ```   docker push cr.yandex/$CR_REGISTRY/backend:$IMAGE_TAG ```<br />
+        ```   docker build -t cr.yandex/$CR_REGISTRY/nginx:$IMAGE_TAG ./nginx/ ```<br />
+        ```   docker push cr.yandex/$CR_REGISTRY/nginx:$IMAGE_TAG ``` <br />
+      
+      ``` - name: Connect to VPC-Server ``` - - подключение к удалённому серверу<br />
+      ```   uses: appleboy/ssh-action@master ```<br />
+      ```   env: ```<br />
+        ```   OAUTH_TOKEN: ${{ secrets.TOKEN }} ```<br />
+        ```   CR_REGISTRY: ${{ secrets.CR_REGISTRY }} ```<br />
+        ```   IMAGE_TAG: ${{ github.sha }} ```<br />
+        ``` with: ```<br />
+        ```   host: 84.201.171.27 ```<br />
+        ```   username: julie ```<br />
+        ```   key: ${{ secrets.SSH_KEY }} ```<br />
+        ```   port: 22 ``` <br />
+        ```   script: |  ``` - выполнение команд на сервере<br />
+          ```   echo ${{ secrets.TOKEN }}|docker login --username oauth --password-stdin cr.yandex ```<br />
+          ```   docker kill $(docker ps -q) &> /dev/null ```<br />
+          ```   docker rmi -f $(docker images -qa) ```<br />
+          ```   docker system prune --all --force ```<br />
+          ```   docker run -p 3000:3000 -d cr.yandex/${{ secrets.CR_REGISTRY }}/frontend:${{ github.sha }} ```<br />
+          ```   docker run -p 8000:8000 -d cr.yandex/${{ secrets.CR_REGISTRY }}/backend:${{ github.sha }} ```<br />
+          ```   docker run -p 80:80 --net=host -d cr.yandex/${{ secrets.CR_REGISTRY }}/nginx:${{ github.sha }} ```<br />
+
+* После успешного развёртывания можем проверить работу:
+
+- [x] по адресу: http://84.201.171.27
+
+![1](https://github.com/FallenAngelllll/project-taski/blob/main/image/CICD/1.png?raw=true)
+
+![2](https://github.com/FallenAngelllll/project-taski/blob/main/image/CICD/2.png?raw=true)
+
+- [x] по адресу: http://84.201.171.27/api/tasks
+
+![3](https://github.com/FallenAngelllll/project-taski/blob/main/image/CICD/3.png?raw=true)
+
+- [x] также создадим еще задачу и проверим, по адресам: http://84.201.171.27 и http://84.201.171.27/api/tasks
+
+![4](https://github.com/FallenAngelllll/project-taski/blob/main/image/CICD/4.png?raw=true)
+
+![5](https://github.com/FallenAngelllll/project-taski/blob/main/image/CICD/5.png?raw=true)
+
+![6](https://github.com/FallenAngelllll/project-taski/blob/main/image/CICD/6.png?raw=true)
+
+* После развертывания проекта остановим виртуальную машину и удалим docker-образы из реестра (YCR).
